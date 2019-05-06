@@ -89,7 +89,7 @@ Example: `docker run -d -e port=3000 -p 3000:3000 my-container:1.0`
 
 Depending on which repository the image is being pushed to an authentication might be required.
 
-`docker push `<tag-name>:<tag-version>`
+`docker push <tag-name>:<tag-version>`
 
 Example: `docker push my-container:1.0`
 
