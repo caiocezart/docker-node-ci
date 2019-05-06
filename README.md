@@ -68,7 +68,7 @@ Master branch will only allow a pull request merge once TravisCI reports succesf
 |-|-|-|
 |--build-arg|Argument variables to be injected to the build|COMMIT_HASH=123456789|
 |-t|Tag the container being build|my-container:1.0|
-|.|Folder where the files to be built are||
+|.|Folder where the files to be built are|-|
 
 Example: `docker build --build-arg COMMIT_HASH=123456789 -t my-container:1.0 .`
 
