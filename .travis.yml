@@ -1,23 +1,19 @@
 language: node_js
-  - "stable"
-cache:
-  directories:
-    - "node_modules"
 services:
   - docker
+stages:
+  - Build
+  - name: Push
+    if: branch = master
 
 jobs:
   include:
     - stage: "Build"
       script: 
-        - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-        - export GIT_COMMIT_SHA=$(head -c 5 .git/refs/heads/${BRANCH})
-        - cat .git/refs/heads/$BRANCH
-        - docker build --build-arg BRANCH=$BRANCH -t caiocezart/docker-node-ci:$GIT_COMMIT_SHA .
+        - export SHORT_SHA=$(echo $TRAVIS_COMMIT | head -c 7)
+        - docker build --build-arg COMMIT_HASH=$TRAVIS_COMMIT -t caiocezart/docker-node-ci:$SHORT_SHA .
+    - stage: "Push"
+      script: 
+        - export SHORT_SHA=$(echo $TRAVIS_COMMIT | head -c 7)
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker push caiocezart/docker-node-ci:$GIT_COMMIT_SHA
-    - stage: "Run"
-      script:
-        - docker run -d -e port=5000 -p 127.0.0.1:5000:5000 caiocezart/docker-node-ci:$GIT_COMMIT_SHA
-        - docker ps -a
-        - curl 127.0.0.1:5000/healthcheck
+        - docker push caiocezart/docker-node-ci:$SHORT_SHA

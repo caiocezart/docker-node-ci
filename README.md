@@ -1,7 +1,6 @@
 # Docker test with NodeJS + multi-stage build + TravisCI
 
 # Table of Contents
-- [Docker test with NodeJS + multi-stage build + TravisCI](#docker-test-with-nodejs--multi-stage-build--travisci)
 - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
     - [NodeJS](#nodejs)
