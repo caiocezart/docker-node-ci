@@ -7,9 +7,6 @@ jobs:
     - stage: "Build"
       script: 
         - docker build -t caiocezart/docker-node-ci .
-    
-    - stage: "Run"
-      script: 
         - docker run -d -e port=5000 -p 5000:5000 caiocezart/docker-node-ci
         - docker ps -a
         - curl localhost:5000/healthcheck
