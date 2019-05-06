@@ -2,9 +2,11 @@
 
 FROM node:12-alpine as build
 
+ARG COMMIT_HASH
+
 COPY ./backend /src
 
-COPY .git/refs/heads/master /src/.lastcommitsha
+RUN echo ${COMMIT_HASH} > /src/.lastcommitsha
 
 WORKDIR /src
 
@@ -30,6 +32,7 @@ WORKDIR /home/node
 
 COPY --from=build /src/node_modules node_modules
 COPY --from=build /src/server.js server.js
+COPY --from=build /src/routes routes
 COPY --from=build /src/.lastcommitsha .lastcommitsha
 COPY --from=build /src/.appversion .appversion
 

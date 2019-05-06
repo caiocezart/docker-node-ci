@@ -1,8 +1,6 @@
 # Docker test with NodeJS + multi-stage build + TravisCI
 
 # Table of Contents
-- [Docker test with NodeJS + multi-stage build + TravisCI](#docker-test-with-nodejs--multi-stage-build--travisci)
-- [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
     - [NodeJS](#nodejs)
     - [Multi-stage build](#multi-stage-build)
@@ -14,15 +12,28 @@
 
 ## Introduction
 
-This repository contains instructions on how to build a NodeJS container application using docker multi-stage build and also uses TravisCI as example of CI pipeline.
+This repository contains instructions on how to build a NodeJS container application using docker multi-stage build and also uses TravisCI as example of a CI pipeline.
 
 ### NodeJS
 
 ### Multi-stage build
-This example will:
 
-- install all necessary npm packages, run tests
-- copy over the `npm_modules` folder and the node start point file `server.js`
+The multi-stage build will help on having a minimal final container image containing only required files to run the application.
+
+Stages:
+
+- build
+  - install all necessary npm packages including dev ones
+  - run linting
+  - generate a file with the latest git commit hash
+  - generate a file with the application version
+  - run tests
+  - clear dev npm packages
+- final
+  - copy `npm_modules` folder
+  - copy `server.js` file (entry point)
+  - copy routes files
+  - copy info files
 
 ### TravisCI
 
