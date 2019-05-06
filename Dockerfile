@@ -2,9 +2,11 @@
 
 FROM node:12-alpine as build
 
+ARG BRANCH
+
 COPY ./backend /src
 
-COPY .git/refs/heads/master /src/.lastcommitsha
+COPY .git/refs/heads/${BRANCH} /src/.lastcommitsha
 
 WORKDIR /src
 
