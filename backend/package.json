@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha ./tests --recursive",
     "start": "node server.js",
-    "format": "prettier-standard '*.js'"
+    "format": "prettier-standard '*.js' '**/*.js'"
   },
   "author": "",
   "license": "ISC",
@@ -14,8 +14,9 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
-    "husky": "^2.2.0",
+    "chai": "^4.2.0",
     "lint-staged": "^8.1.6",
+    "mocha": "^6.1.4",
     "prettier-standard": "^9.1.1"
   },
   "lint-staged": {
@@ -23,17 +24,7 @@
       "**/*.js": [
         "prettier-standard",
         "git add"
-      ],
-      "**/*.jsx": [
-        "prettier-standard",
-        "git add"
       ]
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format",
-      "...": "..."
     }
   }
 }

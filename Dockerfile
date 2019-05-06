@@ -33,11 +33,6 @@ COPY --from=build /src/server.js server.js
 COPY --from=build /src/.lastcommitsha .lastcommitsha
 COPY --from=build /src/.appversion .appversion
 
-HEALTHCHECK --interval=5s \
-            --timeout=5s \
-            --retries=6 \
-            CMD curl -fs http://localhost:${port}/ || exit 1
-
 USER node
 
 CMD ["node", "./server.js"]
