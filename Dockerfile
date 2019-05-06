@@ -19,9 +19,6 @@ RUN cat package.json \
 
 RUN npm ci
 
-RUN npm run format
-RUN npm run test
-
 RUN npm prune --production
 
 ## stage 2
