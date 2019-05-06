@@ -8,18 +8,16 @@ services:
 
 jobs:
   include:
-    - stage: "Smoke test"
-      script:
-        - cd ./backend
-        - npm run format
-        - npm run test
     - stage: "Build"
       script: 
         - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
         - export GIT_COMMIT_SHA=$(head -c 5 .git/refs/heads/${BRANCH})
         - cat .git/refs/heads/$BRANCH
         - docker build --build-arg BRANCH=$BRANCH -t caiocezart/docker-node-ci:$GIT_COMMIT_SHA .
-        - docker run -d -e port=5000 -p 5000:5000 caiocezart/docker-node-ci:$GIT_COMMIT_SHA
-        - docker ps -a
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker push caiocezart/docker-node-ci:$GIT_COMMIT_SHA
+    - stage: "Run"
+      script:
+        - docker run -d -e port=5000 -p 127.0.0.1:5000:5000 caiocezart/docker-node-ci:$GIT_COMMIT_SHA
+        - docker ps -a
+        - curl 127.0.0.1:5000/healthcheck
