@@ -1,5 +1,7 @@
 # Docker test with NodeJS + multi-stage build + TravisCI
 
+![TravisCI](https://travis-ci.com/caiocezart/docker-node-ci.svg?branch=master)
+
 ## Table of Contents
   - [Introduction](#introduction)
     - [NodeJS](#nodejs)
