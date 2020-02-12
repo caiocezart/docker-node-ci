@@ -108,7 +108,7 @@ For a production readiness solution a few changes would be necessary:
 - npm packages and containers artefacts used and stored only at private repositories like Artifactory
 - npm packages using fixed version numbers
 - integration tests on every commit to reduce the chances of broken code moving forward
-- adopt a branching strategy and restrict `master` direct commits. E.g: feature and release branches
+- adopt a branching strategy and restrict `master` direct commits.
 - usage of a third party tool to manage secrets instead of environment variables
 - CI solution based on hosted agents within the local network and with least privilege access
 - GIT commit sha extracted from GitHub API instead of local files

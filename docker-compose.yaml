@@ -1,0 +1,9 @@
+---
+version: '3.0'
+services:
+  kubectl:
+    image: bitnami/kubectl:1.17.3
+    working_dir: /opt/app
+    volumes:
+      - .:/opt/app:rw
+      - ./.kube/:/.kube/
