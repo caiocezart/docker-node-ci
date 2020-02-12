@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.application.name | quote  }}
+  labels:
+    app: {{ .Values.application.name | quote  }}
+  namespace: {{ .Values.k8s.namespace | quote }}
+spec:
+  replicas: {{ .Values.k8s.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.application.name | quote  }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.application.name | quote  }}
+    spec:
+      containers:
+      - name: application
+        image: {{ .Values.k8s.image }}
+        env:
+        - name: "SERVICE_PORT"
+          value: {{ .Values.k8s.servicePort | quote }}
+        - name: "LOG_LEVEL"
+          value: {{ .Values.application.logLevel | quote }}
+        ports:
+        - containerPort: {{ .Values.k8s.servicePort }}
