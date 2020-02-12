@@ -11,6 +11,6 @@ jobs:
   include:
     - stage: "Build&Push"
       script: 
-        make build
-        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        make push
+      - make build
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - make push

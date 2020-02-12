@@ -33,15 +33,12 @@ Stages:
 - build
   - install all necessary npm packages including dev ones
   - run linting
-  - generate a file with the latest git commit hash
-  - generate a file with the application version
   - run tests
   - clear dev npm packages
 - final
-  - copy `npm_modules` folder
+  - copy `node_modules` folder
   - copy `server.js` file (entry point)
-  - copy routes files
-  - copy info files
+  - copy applcation files
 
 ### TravisCI
 
