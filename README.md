@@ -95,6 +95,8 @@ Makefile need to be configured otherwise will assume default values.
 
 If you wish to run docker commands by yourself, here is a brief explanation of most common commands:
 
+(run from backend/ folder)
+
 `docker build -t <tag-name>:<tag-version> .`
 
 |Argument|Description|Example
