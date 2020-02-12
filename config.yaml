@@ -1,0 +1,18 @@
+registryUrl: caiocezart
+
+gcp:
+  region: australia-southeast1-a
+  projectId: ""
+  clusterName: ""
+
+application:
+  name: caio-api
+  version: 1.0.0
+  logLevel: info
+
+k8s:
+  namespace: default
+  image: caiocezart/caio-api:latest
+  replicas: 1
+  hostPort: 8080
+  servicePort: 5000

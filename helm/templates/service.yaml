@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.application.name }}
+  labels:
+    app: {{ .Values.application.name }}
+  namespace: {{ .Values.k8s.namespace }}
+spec:
+  ports:
+  - port: {{ .Values.k8s.hostPort }}
+    protocol: TCP
+    targetPort: {{ .Values.k8s.servicePort }}
+  selector:
+    app: {{ .Values.application.name }}
+  type: NodePort

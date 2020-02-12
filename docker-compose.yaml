@@ -1,8 +1,19 @@
 ---
 version: '3.0'
 services:
+  helm:
+    image: alpine/helm:3.0.3
+    working_dir: /opt/app
+    volumes:
+      - .:/opt/app:rw
   kubectl:
     image: bitnami/kubectl:1.17.3
+    working_dir: /opt/app
+    volumes:
+      - .:/opt/app:rw
+      - ./.kube/:/.kube/
+  yq:
+    image: mikefarah/yq:3.1.0
     working_dir: /opt/app
     volumes:
       - .:/opt/app:rw

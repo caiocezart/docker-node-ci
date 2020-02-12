@@ -5,14 +5,15 @@
 ## Table of Contents
   - [Introduction](#introduction)
     - [NodeJS](#nodejs)
+    - [Application settings](#Application-settings)
     - [Multi-stage build](#multi-stage-build)
     - [TravisCI](#travisci)
+    - [Kubernetes](#kubernetes)
   - [Running Instructions](#running-instructions)
     - [Requirements](#requirements)
     - [Makefile config](#makefile-config)
-    - [Local run](#local-run)
-    - [Extra Makefile targets](#Extra-Makefile-targets)
-    - [Manual instructions](#Manual-instructions)
+    - [Targets](#targets)
+  - [Manual instructions](#Manual-instructions)
   - [What is Next](#what-is-next)
 
 ## Introduction
@@ -22,6 +23,10 @@ This repository contains instructions on how to build a NodeJS container applica
 ### NodeJS
 
 This application uses ExpressJS to provide a simple api endpoint and return some information about the app itself.
+
+### Application settings
+
+The application settings can be configured through the [config.yaml](config.yaml) file. There you can set the app name, version number and gcp/gke settings in case of a kubernetes deployment.
 
 ### Multi-stage build
 
@@ -48,6 +53,13 @@ will execute lint, tests and build the container (tests are part of the containe
 - push (will only run for master)
 will build container, tag with git commit hash and push to dockerhub.com
 
+### Kubernetes
+
+A deployment and a service manifest is provided through a custom helm template that will automatically get the last image tag generated and can be deployed to a local or remote kubernetes cluster.
+
+Tests can be done through a port-forward on the service created.
+
+`kubectl port-forward service/<app-name> <service-port>:<host-port>`
 
 ## Running Instructions
 
@@ -60,38 +72,48 @@ This project is based on the 3musketeers (https://3musketeers.io/) approach, whi
 
 ### Makefile config
 
-Please do a quick review on the Makefile top sections and configure accordingly to your environment:
+Please do a quick review on the [config.yaml](config.yaml) file and configure accordingly to your environment before running make commands.
 
-|Section|Description|
-|-|-|
-|DEFAULTS|Default Makefile settings|Un-comment .SILENT if you need more logs for troubleshooting|
-|GKE|Provide values for your GCP project + GKE cluster - required for make deploy|
-|APPLICATION|API values like name/version/port and others|
+Un-comment the `.SILENT:` line if you desire a more verbose logging from Makefile.
 
-### Local run
+It might take a few seconds to start running due to `docker-compose` image pulling.
 
-`make test`
-
-### Extra Makefile targets
-
-Makefile need to be configured otherwise will assume default values.
+### Targets
 
 - `make build`
-  - Build local image.
+
+Build local image, tag with `GIT_SHORT_SHA` and update `latest` tag.
 
 - `make push`
-  - Push local image to registry.
+
+Push recently built image to local or remote registry (settings on [config.yaml](config.yaml)).
 
 - `make run`
-  - Run local image.
+
+Run local image.
+
+- `make test`
+
+This target will run `make build` and `make run`
 
 - `make deploy`
-  - Creates two kubernetes resources:
-    - deployment
-    - service (expose deployment)
+
+Runs a custom helm template with config values from [config.yaml](config.yaml) and deploy a Deployment and a Service to your currently configure kubeconfig context.
+
+#### MAKE SURE TO BE POINTING TO THE RIGHT CLUSTER.
+
+PS.: You might need to adjust the `_auth` target on the `Makefile` if your cluster is private.
+
+If your cluster does not have ingress configured, you can test the service running:
+
+`kubectl port-forward service/application-name service-port:host-port`
+
+or 
+
+`make forward`
 
 
-### Manual instructions
+## Manual instructions
 
 If you wish to run docker commands by yourself, here is a brief explanation of most common commands:
 

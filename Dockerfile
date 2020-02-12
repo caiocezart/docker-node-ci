@@ -17,6 +17,14 @@ RUN npm prune --production
 
 FROM node:12.1.0-alpine
 
+ARG ARG_SERVICE_NAME
+ARG ARG_SERVICE_VERSION
+ARG ARG_GIT_SHA
+
+ENV SERVICE_NAME=$ARG_SERVICE_NAME
+ENV SERVICE_VERSION=$ARG_SERVICE_VERSION
+ENV GIT_SHA=$ARG_GIT_SHA
+
 WORKDIR /home/node
 
 COPY --from=build /src/node_modules node_modules
