@@ -1,15 +1,20 @@
-dist: trusty
+language: nodejs
 
 services:
   - docker
 
 stages:
-  - Build&Push
+  - Build
+  - name: Push
+    if: branch = master
 
 jobs:
   include:
-    - stage: "Build&Push"
+    - stage: "Build"
+      script:
+        - make build
+    - stage: "Push"
       script: 
-        make build && \
-        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && \
-        make push
+        - make build
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - make push

@@ -42,11 +42,11 @@ Stages:
 
 ### TravisCI
 
-TravisCI example pipeline has been provided with automatic push of the image. CI configuration can be accessed at `.travis.yml` file [here](.travis.yml).
+TravisCI example pipeline has been provided with image build and push to a repository. This pipeline is configured to push the image to DockerHub. CI configuration can be found at `.travis.yml` file [here](.travis.yml).
 
-- build (will always run for all branch pushes and pull request)
+- build
   - will execute tests and build the container (tests are part of the container build)
-- push (will only run for master)
+- push
   - will build container, tag with git commit hash and push to github.com
 
 ### GitHub
