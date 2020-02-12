@@ -7,13 +7,12 @@
     - [NodeJS](#nodejs)
     - [Multi-stage build](#multi-stage-build)
     - [TravisCI](#travisci)
-    - [GitHub](#github)
-  - [Manual Instructions](#manual-instructions)
-    - [Run Application Locally](#run-application-locally)
-    - [Build](#build)
-    - [Run](#run)
-    - [Push](#push)
-    - [Test](#test)
+  - [Running Instructions](#running-instructions)
+    - [Requirements](#requirements)
+    - [Makefile config](#makefile-config)
+    - [Local run](#local-run)
+    - [Extra Makefile targets](#Extra-Makefile-targets)
+    - [Manual instructions](#Manual-instructions)
   - [What is Next](#what-is-next)
 
 ## Introduction
@@ -44,70 +43,132 @@ Stages:
 
 TravisCI example pipeline has been provided with image build and push to a repository. This pipeline is configured to push the image to DockerHub. CI configuration can be found at `.travis.yml` file [here](.travis.yml).
 
-- build
-  - will execute tests and build the container (tests are part of the container build)
-- push
-  - will build container, tag with git commit hash and push to github.com
+- build (will always run for all branch pushes and pull request)
+will execute lint, tests and build the container (tests are part of the container build)
+- push (will only run for master)
+will build container, tag with git commit hash and push to dockerhub.com
 
-### GitHub
 
-Master branch will only allow a pull request merge once TravisCI reports succesfull build and push for a commit.
+## Running Instructions
 
-## Manual Instructions
+This project is based on the 3musketeers (https://3musketeers.io/) approach, which is simply using a combination of Makefile + Docker + docker-compose. This combination provides consistency across multiple CI/CD tooling as your scripts will be all abstracted by the Makefile and you won't be locked to the tool language. Also makes it easier to run it locally as Docker images will contain all the requirements to build and run the application.
 
-### Run application locally
+### Requirements
 
-`npm install && port=5000 npm start`
+- [Docker](https://docs.docker.com/install/)
+- [docker-compose](https://docs.docker.com/compose/install/)
 
-### Build
+### Makefile config
 
-`docker build --build-arg COMMIT_HASH=<git-commit-hash> -t <tag-name>:<tag-version> .`
+Please do a quick review on the Makefile top sections and configure accordingly to your environment:
+
+|Section|Description|
+|-|-|
+|DEFAULTS|Default Makefile settings|Un-comment .SILENT if you need more logs for troubleshooting|
+|GKE|Provide values for your GCP project + GKE cluster - required for make deploy|
+|APPLICATION|API values like name/version/port and others|
+
+### Local run
+
+`make test`
+
+### Extra Makefile targets
+
+Makefile need to be configured otherwise will assume default values.
+
+- `make build`
+  - Build local image.
+
+- `make push`
+  - Push local image to registry.
+
+- `make run`
+  - Run local image.
+
+- `make deploy`
+  - Creates two kubernetes resources:
+    - deployment
+    - service (expose deployment)
+
+
+### Manual instructions
+
+If you wish to run docker commands by yourself, here is a brief explanation of most common commands:
+
+`docker build -t <tag-name>:<tag-version> .`
 
 |Argument|Description|Example
 |-|-|-|
 |--build-arg|Argument variables to be injected to the build|COMMIT_HASH=123456789|
-|-t|Tag the container being build|my-container:1.0|
+|-t|Tag the container being build|test-api:12345|
 |.|Folder where the files to be built are|-|
 
-Example: `docker build --build-arg COMMIT_HASH=123456789 -t my-container:1.0 .`
+Example: `docker build -t test-api:12345 .`
 
-### Run
+#### Run
 
-`docker run -d -e port=<app-port> -p <host-port>:<container-port> <tag-name>:<tag-version>`
+```
+docker run -d \
+	-p <SERVICE_PORT>:<HOST_PORT> \
+	-e SERVICE_NAME=<SERVICE_NAME> \
+	-e SERVICE_PORT=<SERVICE_PORT> \
+	-e SERVICE_VERSION=<SERVICE_VERSION> \
+	-e LOG_LEVEL=<LOG_LEVEL> \
+	-e GIT_SHA=<GIT_SHA> \
+	<CONTAINER_IMAGE>
+```
 
 |Argument|Description|Example
 |-|-|-|
 |-d|Detachable mode - run in background|-|
 |-e port=`<app-port>`|Port which the application will be listening|`-e port=3000`|
-|-p `<host-port>:<container-port>`|Expose a host port to a container port|`-p 5000:3000`|
-|`<tag-name>:<tag-version>`|Image to run|my-container:1.0|
+|-p `<SERVICE_PORT>:<HOST_PORT>`|Expose a host port to a container port|`-p 5000:3000`|
+|-e SERVICE_NAME=<SERVICE_NAME>|Application name|`test-api`|
+|-e SERVICE_PORT=<SERVICE_PORT>|Application port running inside container|`5000`|
+|-e SERVICE_VERSION=<SERVICE_VERSION>|Application version|`1.0.0`|
+|-e LOG_LEVEL=<LOG_LEVEL>|Log level|`info` `debug` `error`|
+|-e GIT_SHA=<GIT_SHA>|GIT short SHA|`12345`|
+|`<CONTAINER_IMAGE>`|Image to run|test-api:12345|
 
-Example: `docker run -d -e port=3000 -p 3000:3000 my-container:1.0`
+Example: 
+```
+docker run -d \
+  -p 3000:3000 \
+  -e SERVICE_NAME=test-api \
+  -e SERVICE_PORT=5000 \
+  -e SERVICE_VERSION=1.0.0 \
+  -e LOG_LEVEL=info \
+  -e GIT_SHA=12345 \
+  test-api:12345
+```
 
-### Push
+#### Push
 
 Depending on which repository the image is being pushed to an authentication might be required.
 
-`docker push <tag-name>:<tag-version>`
+`docker push <CONTAINER_IMAGE>`
 
-Example: `docker push my-container:1.0`
+Example: `docker push test-api:12345`
 
-### Test
+#### Test
 
 From terminal
 
-`curl localhost:5000/`
+`curl localhost:5000/info`
 
 ## What Is Next
 
 This example is a basic demonstration of what can be done using different technologies like NodeJS, Docker and Continuous Integration pipelines.
 
-For a production readiness solution a few changes would be necessary:
+For a production readiness solution a few changes would be necessary but not limited to:
 
-- npm packages and containers artefacts used and stored only at private repositories like Artifactory
+- npm packages and containers artefacts used and stored only at private repositories like Artifactory which can be scanned and signed by Security
+- pipelines to adopt binary authentication to guarantee atestation throughout its life-cycle
+- continuous deployment strategies like blue/green or canary
+- store any secrets on a proper management tool like sealed-secrets or vault
+- CI solution based on hosted agents within the local network and with least privilege access
+- Configure repository to only accept a Pull Request after receiving a pass from the CI pipeline
 - npm packages using fixed version numbers
 - integration tests on every commit to reduce the chances of broken code moving forward
 - adopt a branching strategy and restrict `master` direct commits.
-- usage of a third party tool to manage secrets instead of environment variables
-- CI solution based on hosted agents within the local network and with least privilege access
 - GIT commit sha extracted from GitHub API instead of local files

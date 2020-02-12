@@ -1,18 +1,16 @@
-# Set some sensible defaults
+# DEFAULTS
 SHELL := /bin/bash
-.SILENT:
+OUTPUT_PATH ?= output
+HOST_PORT ?= 5000
+# .SILENT:
 
-# if using GKE for deployment
+# GKE
 GCP_PROJECT_ID ?=
 GCP_REGION ?= australia-southeast1
 GKE_CLUSTER_NAME ?=
 GKE_NAMESPACE ?=
 
-# general
-OUTPUT_PATH ?= output
-HOST_PORT ?= 5000
-
-# application settings
+# APPLICATION
 SERVICE_NAME ?= caio-api
 SERVICE_VERSION ?= 1.0.0
 SERVICE_PORT ?= 5000

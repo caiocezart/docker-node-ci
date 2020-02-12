@@ -1,10 +1,21 @@
 const express = require('express');
 const infoRoute = require('./routes/info');
 const environ = require('./lib/environ');
+const winston = require('winston');
 
-const app = express();
-const PORT = environ.servicePort;
+try {
+    const console = new winston.transports.Console();
+    winston.format = winston.format.splat();
+    winston.level = environ.logLevel;
+    winston.add(console);
 
-app.get('/info', infoRoute)
+    const app = express();
+    const PORT = environ.servicePort;
 
-app.listen(PORT, () => console.log(`app listening on port ${PORT}!`))
+    app.get('/info', infoRoute)
+
+    app.listen(PORT, () => winston.info(`app listening on port ${PORT}!`))
+
+} catch (err) {
+    winston.error(`Something went wrong. ${err}`);
+}
