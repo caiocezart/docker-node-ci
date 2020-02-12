@@ -20,12 +20,14 @@ function info(req, res) {
     winston.debug(`${result}`);
     winston.info(`Request from ${req.hostname} received. Returning info.`);
     
-    res.status(200).send({
+    res.send({
+      status: 200,
       body: result
     })
   } catch (err) {
     winston.error(`Something went wrong. ${err}`);    
-    res.status(500).send({
+    res.send({
+      status: 500,
       body: String(err)
     });
   }
