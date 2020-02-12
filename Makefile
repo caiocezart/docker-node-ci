@@ -44,7 +44,7 @@ run:
 		$(CONTAINER_IMAGE)
 
 .PHONY: deploy
-deploy: env-GCP_PROJECT_ID env-GCP_REGION env-GKE_CLUSTER_NAME env-GKE_NAMESPACE _prepare _auth
+deploy: ENV-GCP_PROJECT_ID ENV-GCP_REGION ENV-GKE_CLUSTER_NAME ENV-GKE_NAMESPACE _prepare _auth
 	$(KUBECTL) run $(SERVICE_NAME) --image=$(CONTAINER_IMAGE)
 	$(KUBECTL) expose deployment $(SERVICE_NAME) --port=$(HOST_PORT) --target-port=$(SERVICE_PORT)
 
@@ -72,7 +72,7 @@ _clear:
 	docker-compose down --remove-orphans 2>/dev/null
 
 # check if variable is set
-_env-%:
+_ENV-%:
 	@ if [ "${${*}}" = "" ]; then \
 		echo "Environment variable $* not set"; \
 		exit 1; \

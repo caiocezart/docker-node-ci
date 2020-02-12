@@ -8,9 +8,6 @@ stages:
 
 jobs:
   include:
-    - stage: "Build"
+    - stage: "Build&Push"
       script: 
-        make build
-    - stage: "Push"
-      script:
-        make push
+        make build && make push
