@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const healthcheck = require('../routes/healthcheck')
+const info = require('../routes/info')
 
 let req = {
   body: {}
@@ -11,10 +11,10 @@ let res = {
   }
 }
 
-describe('Healthcheck Route', function () {
-  describe('healthcheck() function', function () {
+describe('Info Route', function () {
+  describe('info() function', function () {
     it('should return http 200', function () {
-      healthcheck(req, res)
+      info(req, res)
       expect(res.status).to.equals(200)
     })
   })

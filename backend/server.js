@@ -1,15 +1,10 @@
-const express = require('express')
-const healthcheckRoute = require('./routes/healthcheck')
-const fs = require('fs')
-const path = require('path')
+const express = require('express');
+const infoRoute = require('./routes/info');
+const environ = require('./lib/environ');
 
-const app = express()
-const PORT = process.env.port
+const app = express();
+const PORT = environ.servicePort;
 
-if (!PORT) {
-  throw Error(`Listening port not defined.`)
-}
-
-app.get('/healthcheck', healthcheckRoute)
+app.get('/info', infoRoute)
 
 app.listen(PORT, () => console.log(`app listening on port ${PORT}!`))

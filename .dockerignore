@@ -1,8 +1,6 @@
 README.md
 .git
 .gitignore
-.appversion
-.lastcommitsha
 Dockerfile
 .dockerignore
 node_modules
