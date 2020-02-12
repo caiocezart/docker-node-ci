@@ -81,12 +81,14 @@ _prepare: _clear
 	mkdir -p .kube/
 	cp ~/.kube/config .kube/
 	chmod 644 .kube/config
-	docker-compose pull 
+	docker-compose pull yq
+	docker-compose pull kubectl
+	docker-compose pull helm 
 
 .PHONY: _clear
 _clear:
 	rm -rf .kube/* $(OUTPUT_PATH)/*
-	# docker-compose down --remove-orphans 2>/dev/null
+	docker-compose down --remove-orphans 2>/dev/null
 
 # check if variable is set
 _ENV-%:

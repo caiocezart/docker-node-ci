@@ -98,7 +98,7 @@ This target will run `make build` and `make run`
 
 - `make deploy`
 
-Runs a custom helm template with config values from [config.yaml](config.yaml) and deploy a Deployment and a Service to your currently configure kubeconfig context.
+Runs a custom helm template with config values from [config.yaml](config.yaml) and deploy a Deployment and a Service to your currently configure Kubernetes (kubeconfig) context.
 
 #### MAKE SURE TO BE POINTING TO THE RIGHT CLUSTER.
 
@@ -106,7 +106,7 @@ PS.: You might need to adjust the `_auth` target on the `Makefile` if your clust
 
 If your cluster does not have ingress configured, you can test the service running:
 
-`kubectl port-forward service/application-name service-port:host-port`
+`kubectl port-forward service/application-name host-port:host-port`
 
 or 
 
@@ -116,8 +116,6 @@ or
 ## Manual instructions
 
 If you wish to run docker commands by yourself, here is a brief explanation of most common commands:
-
-(run from backend/ folder)
 
 `docker build -t <tag-name>:<tag-version> .`
 
