@@ -42,7 +42,7 @@ Stages:
 
 ### TravisCI
 
-TravisCI configuration can be accessed at `.travis.yml` file [here](.travis.yml) and the pipeline consists in two stages:
+TravisCI example pipeline has been provided with automatic push of the image. CI configuration can be accessed at `.travis.yml` file [here](.travis.yml).
 
 - build (will always run for all branch pushes and pull request)
   - will execute tests and build the container (tests are part of the container build)
