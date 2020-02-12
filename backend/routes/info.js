@@ -1,5 +1,6 @@
 const environ = require('../lib/environ');
-const winston = require('winston');
+const pino = require('pino');
+const logger = pino({ level: environ.logLevel });
 
 function info(req, res) {
   try {
@@ -17,15 +18,15 @@ function info(req, res) {
       throw Error("GIT COMMIT SHA MISSING!")
     }
 
-    winston.debug(`${result}`);
-    winston.info(`Request from ${req.hostname} received. Returning info.`);
+    logger.debug(`${String(result)}`);
+    logger.info(`Request from ${req.hostname} received. Returning info.`);
     
     res.send({
       status: 200,
       body: result
     })
   } catch (err) {
-    winston.error(`Something went wrong. ${err}`);    
+    logger.error(`Something went wrong. ${String(err)}`);    
     res.send({
       status: 500,
       body: String(err)

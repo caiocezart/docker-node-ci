@@ -1,21 +1,16 @@
 const express = require('express');
 const infoRoute = require('./routes/info');
-const environ = require('./lib/environ');
-const winston = require('winston');
+const environ = require('./lib/environ.js');
+const pino = require('pino');
+const expressPino = require('express-pino-logger');
 
-try {
-    const console = new winston.transports.Console();
-    winston.format = winston.format.splat();
-    winston.level = environ.logLevel;
-    winston.add(console);
+const logger = pino({ level: environ.logLevel });
+const expressLogger = expressPino({ logger });
 
-    const app = express();
-    const PORT = environ.servicePort;
+const app = express();
+const PORT = environ.servicePort;
 
-    app.get('/info', infoRoute)
+app.use(expressLogger);
+app.get('/info', infoRoute)
 
-    app.listen(PORT, () => winston.info(`app listening on port ${PORT}!`))
-
-} catch (err) {
-    winston.error(`Something went wrong. ${err}`);
-}
+app.listen(PORT, () => logger.info(`app listening on port ${PORT}!`))
