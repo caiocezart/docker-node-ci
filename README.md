@@ -1,7 +1,5 @@
 # Docker test with NodeJS + multi-stage build + TravisCI
 
-![TravisCI](https://travis-ci.com/caiocezart/docker-node-ci.svg?branch=master)
-
 ## Table of Contents
   - [Introduction](#introduction)
     - [NodeJS](#nodejs)
@@ -46,12 +44,18 @@ Stages:
 
 ### TravisCI
 
-TravisCI example pipeline has been provided with image build and push to a repository. This pipeline is configured to push the image to DockerHub. CI configuration can be found at `.travis.yml` file [here](.travis.yml).
+TravisCI example pipeline yaml code has been provided with image build and push to a repository. This pipeline is configured to push the image to DockerHub. CI configuration can be found at `.travis.yml` file [here](.travis.yml). This is not implemented, is just an illustration of how it would look like with any CI/CD tool.
 
 - build (will always run for all branch pushes and pull request)
+
 will execute lint, tests and build the container (tests are part of the container build)
+
 - push (will only run for master)
+
 will build container, tag with git commit hash and push to dockerhub.com
+
+- deploy (only for master)
+will run helm template to generate k8s manifests and deploy those to kubernetes cluster
 
 ### Kubernetes
 

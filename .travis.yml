@@ -7,6 +7,8 @@ stages:
   - Build
   - name: Push
     if: branch = master
+  - name: Deploy
+    if: branch = master
 
 jobs:
   include:
@@ -18,3 +20,6 @@ jobs:
         - make build
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - make push
+    - stage: "Deploy"
+      script: 
+        - make deploy
